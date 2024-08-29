@@ -1,6 +1,6 @@
 name: perf_driver
 description: "A new Flutter package project."
-version: 0.0.1
+version: 0.0.1+1
 homepage:
 
 environment:
@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_driver:
+    sdk: flutter
+  flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
