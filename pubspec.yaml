@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   flutter_driver:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
   integration_test:
     sdk: flutter
   vm_service: ^11.7.1
