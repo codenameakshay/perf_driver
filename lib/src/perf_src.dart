@@ -1,11 +1,10 @@
 import 'dart:developer' as developer;
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:vm_service/vm_service_io.dart';
 
-typedef TestCallback = Future<void> Function(IntegrationTestWidgetsFlutterBinding binding, WidgetTester tester);
+typedef TestCallback = Future<void> Function(IntegrationTestWidgetsFlutterBinding binding);
 
 /// Wrap your integration test with this method, and use the driver to run the test.
 /// Currently, this method generates a performance report for the test, which includes UI and raster thread performance metrics.
@@ -14,7 +13,6 @@ typedef TestCallback = Future<void> Function(IntegrationTestWidgetsFlutterBindin
 /// Example command - `fvm flutter drive --driver=package:perf_driver/perf_driver.dart --target=test.dart --no-dds --profile`
 Future<void> runPerformanceTest(
   String testName, {
-  required WidgetTester tester,
   required TestCallback callback,
   bool showPerformanceOverlay = true,
   String reportKey = 'widget_build',
@@ -40,7 +38,7 @@ Future<void> runPerformanceTest(
     await binding.traceAction(
       () async {
         // Run the user-provided test callback
-        await callback(binding, tester);
+        await callback(binding);
 
         // Measure final CPU and memory usage after the interaction
         final finalCpuUsage = await getCpuUsage(vmService, isolateId);
