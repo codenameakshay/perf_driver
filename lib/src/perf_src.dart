@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:perf_driver/src/vm_utils.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:vm_service/vm_service_io.dart';
 
@@ -81,32 +82,4 @@ Future<void> runPerformanceTest(
     // Clean up
     await vmService?.dispose();
   }
-}
-
-Future<Map<String, dynamic>> getCpuUsage(VmService? vmService, String? isolateId) async {
-  if (isolateId == null) {
-    return <String, dynamic>{};
-  }
-  final timeline = await vmService?.getCpuSamples(isolateId, 0, DateTime.now().millisecondsSinceEpoch);
-  final totalCpuSamples = timeline?.samples?.length ?? 0;
-  return {
-    'total_cpu_samples': totalCpuSamples,
-  };
-}
-
-Future<Map<String, dynamic>> getMemoryUsage(VmService? vmService, String? isolateId) async {
-  if (isolateId == null) {
-    return <String, dynamic>{};
-  }
-  final memoryUsage = await vmService?.getMemoryUsage(isolateId);
-  return {
-    'memory_usage': memoryUsage,
-  };
-}
-
-Future<Map<String, String>> getDeviceDetails(VmService? vmService) async {
-  final vm = await vmService?.getVM();
-  return {
-    'operating_system': vm?.operatingSystem ?? 'Unknown OS',
-  };
 }

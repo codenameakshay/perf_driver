@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
 
-import 'package:flutter/material.dart';
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:perf_driver/perf_src.dart';
+import 'package:perf_driver/src/vm_utils.dart';
 import 'package:vm_service/vm_service.dart' as vm;
-import 'package:vm_service/vm_service_io.dart';
+import 'package:vm_service/vm_service_io.dart' show vmServiceConnectUri;
 
 typedef TestBaseCallback = Future<void> Function(FlutterDriver driver);
 
@@ -16,7 +15,6 @@ typedef TestBaseCallback = Future<void> Function(FlutterDriver driver);
 /// Example command - `fvm flutter drive --driver=test_driver/perf_driver.dart --target=test.dart --no-dds --profile`
 Future<void> runPerformanceTestBase(
   String testName, {
-  required Widget testWidget,
   required FlutterDriver driver,
   required TestBaseCallback callback,
 }) async {
