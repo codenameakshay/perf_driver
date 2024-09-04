@@ -1,9 +1,17 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 
-import 'package:flutter_driver/driver_extension.dart';
-import 'package:flutter_driver/flutter_driver.dart';
+import 'package:flutter_driver/driver_extension.dart' show FinderExtension, CommandExtension;
+import 'package:flutter_driver/flutter_driver.dart' show Timeline, TimelineSummary;
 import 'package:perf_driver/perf_driver.dart';
+
+typedef FlutterDriverExtensionCallback = void Function({
+  Future<String> Function(String?)? handler,
+  bool silenceErrors,
+  bool enableTextEntryEmulation,
+  List<FinderExtension>? finders,
+  List<CommandExtension>? commands,
+});
 
 /// Runs performance tests and generates a detailed performance report.
 ///
@@ -27,10 +35,13 @@ import 'package:perf_driver/perf_driver.dart';
 ///   // perfDriver(customBaselines: PerformanceBaselines(...));
 /// }
 /// ```
-Future<void> perfDriverBase({PerformanceBaselines? customBaselines}) async {
+Future<void> perfDriverBase({
+  required FlutterDriverExtensionCallback flutterDriverExtension,
+  PerformanceBaselines? customBaselines,
+}) async {
   final baselines = customBaselines ?? const PerformanceBaselines();
 
-  enableFlutterDriverExtension(handler: (data) async {
+  flutterDriverExtension(handler: (data) async {
     if (data != null) {
       final jsonData = jsonDecode(data) as Map<String, dynamic>;
       final cpuUsageData = jsonData['cpu_usage'] as Map<String, dynamic>;
