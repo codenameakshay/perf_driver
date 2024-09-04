@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_driver/flutter_driver.dart' show Timeline, TimelineSummary;
 import 'package:perf_driver/src/perf_baselines.dart';
 import 'package:perf_driver/src/utils.dart';
@@ -33,6 +34,7 @@ typedef FlutterDriverExtensionCallback = void Function({
 /// ```
 Future<void> perfDriverBase({
   required FlutterDriverExtensionCallback flutterDriverExtension,
+  required VoidCallback runAppMain,
   PerformanceBaselines? customBaselines,
 }) async {
   final baselines = customBaselines ?? const PerformanceBaselines();
@@ -88,7 +90,7 @@ Future<void> perfDriverBase({
 
       // Generate and save the performance report
       final report = convertMapToReadableText(testingData, defaultBaselines: baselines);
-      saveMarkdownFile(
+      await saveMarkdownFile(
           report, '${DateTime.now().toIso8601String()}.md', 'performance_report/${deviceDetails['operating_system']}');
 
       // Write the timeline to a file for further analysis if needed
@@ -103,4 +105,6 @@ Future<void> perfDriverBase({
       return 'No data received';
     }
   });
+
+  runAppMain();
 }

@@ -11,7 +11,7 @@ String bytesToMB(int? bytes) {
 /// Saves the given content as a markdown file in the specified directory.
 ///
 /// If the directory doesn't exist, it will be created.
-void saveMarkdownFile(String content, String fileName, String directory) async {
+Future<void> saveMarkdownFile(String content, String fileName, String directory) async {
   final dir = Directory(directory);
   if (!dir.existsSync()) {
     dir.createSync(recursive: true);

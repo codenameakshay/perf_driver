@@ -64,7 +64,8 @@ Future<void> runPerformanceTestBase(
       },
     };
 
-    driver.requestData(jsonEncode(reportData));
+    final perfDataResult = await driver.requestData(jsonEncode(reportData));
+    developer.log(perfDataResult);
   } on Exception catch (e) {
     developer.log(e.toString());
   } finally {
