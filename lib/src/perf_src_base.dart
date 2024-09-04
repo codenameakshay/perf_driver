@@ -3,12 +3,11 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:perf_driver/perf_src.dart';
 import 'package:vm_service/vm_service.dart' as vm;
 import 'package:vm_service/vm_service_io.dart';
 
-typedef TestBaseCallback = Future<void> Function(FlutterDriver driver, WidgetTester tester);
+typedef TestBaseCallback = Future<void> Function(FlutterDriver driver);
 
 /// This method wraps your performance test with Flutter Driver.
 /// It generates a performance report, including UI and raster thread performance metrics,
@@ -19,14 +18,7 @@ Future<void> runPerformanceTestBase(
   String testName, {
   required Widget testWidget,
   required FlutterDriver driver,
-  required WidgetTester tester,
   required TestBaseCallback callback,
-
-  /// Whether to wrap the test widget with a MaterialApp
-  /// Also if performance overlay is true, this value is ignored
-  bool wrapWithMaterialApp = true,
-  bool showPerformanceOverlay = true,
-  String reportKey = 'widget_build',
 }) async {
   vm.VmService? vmService;
   String? isolateId;
@@ -45,22 +37,13 @@ Future<void> runPerformanceTestBase(
     final initialMemoryUsage = await getMemoryUsage(vmService, isolateId);
     final deviceDetails = await getDeviceDetails(vmService);
 
-    // Start tracing performance
-    await driver.startTracing();
-
-    await tester.pumpWidget(
-      showPerformanceOverlay || wrapWithMaterialApp
-          ? MaterialApp(
-              showPerformanceOverlay: true,
-              home: testWidget,
-            )
-          : testWidget,
+    final timeline = await driver.traceAction(
+      () async {
+        // Run the user-provided test callback
+        await callback(driver);
+      },
+      retainPriorEvents: true,
     );
-    // Run the user-provided test callback
-    await callback(driver, tester);
-
-    // Stop tracing performance
-    final timeline = await driver.stopTracingAndDownloadTimeline();
 
     // Measure final CPU and memory usage after the interaction
     final finalCpuUsage = await getCpuUsage(vmService, isolateId);
@@ -68,7 +51,7 @@ Future<void> runPerformanceTestBase(
 
     // Report the benchmark result
     final timelineSummary = TimelineSummary.summarize(timeline);
-    await timelineSummary.writeTimelineToFile(reportKey, pretty: true);
+    await timelineSummary.writeTimelineToFile('widget_build', pretty: true);
 
     final reportData = <String, dynamic>{
       'widget_build': timeline.json,
