@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:developer' as dev;
 
 import 'package:flutter_driver/flutter_driver.dart' show Timeline, TimelineSummary;
-import 'package:perf_driver/perf_driver.dart';
+import 'package:perf_driver/src/perf_baselines.dart';
+import 'package:perf_driver/src/utils.dart';
 
 typedef FlutterDriverExtensionCallback = void Function({
   Future<String> Function(String?)? handler,
