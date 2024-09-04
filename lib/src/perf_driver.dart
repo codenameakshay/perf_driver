@@ -28,20 +28,7 @@ import 'package:perf_driver/src/perf_baselines.dart';
 /// }
 /// ```
 Future<void> perfDriver({PerformanceBaselines? customBaselines}) {
-  final baselines = customBaselines ??
-      const PerformanceBaselines(
-        percentile90thBuildTime: 6.0,
-        percentile95thBuildTime: 8.0,
-        percentile99thBuildTime: 12.0,
-        missedFrameBuildBudgetCount: 2,
-        missedFrameBuildBudgetPercentage: 2.5,
-        missedFrameRasterizerBudgetCount: 2,
-        missedFrameRasterizerBudgetPercentage: 2.5,
-        averageBuildTime: 6.0,
-        worstBuildTime: 30.0,
-        memoryUsageMB: 200.0,
-        cpuUsageIncrease: 500000,
-      );
+  final baselines = customBaselines ?? const PerformanceBaselines();
 
   return integrationDriver(
     responseDataCallback: (data) async {

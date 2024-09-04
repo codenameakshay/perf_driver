@@ -23,7 +23,6 @@ Future<void> runPerformanceTest(
   /// Also if performance overlay is true, this value is ignored
   bool wrapWithMaterialApp = true,
   bool showPerformanceOverlay = true,
-  String reportKey = 'widget_build',
 }) async {
   final binding = IntegrationTestWidgetsFlutterBinding.instance;
   VmService? vmService;
@@ -74,7 +73,7 @@ Future<void> runPerformanceTest(
         };
       },
       retainPriorEvents: true,
-      reportKey: reportKey,
+      reportKey: 'widget_build',
     );
   } on Exception catch (e) {
     developer.log(e.toString());
