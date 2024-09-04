@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 
-import 'package:flutter/material.dart';
 import 'package:flutter_driver/flutter_driver.dart' show Timeline, TimelineSummary;
 import 'package:perf_driver/src/perf_baselines.dart';
 import 'package:perf_driver/src/utils.dart';
@@ -34,7 +33,7 @@ typedef FlutterDriverExtensionCallback = void Function({
 /// ```
 Future<void> perfDriverBase({
   required FlutterDriverExtensionCallback flutterDriverExtension,
-  required VoidCallback runAppMain,
+  required void Function() runAppMain,
   PerformanceBaselines? customBaselines,
 }) async {
   final baselines = customBaselines ?? const PerformanceBaselines();
