@@ -1,16 +1,11 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 
-import 'package:flutter_driver/driver_extension.dart' show FinderExtension, CommandExtension;
 import 'package:flutter_driver/flutter_driver.dart' show Timeline, TimelineSummary;
 import 'package:perf_driver/perf_driver.dart';
 
 typedef FlutterDriverExtensionCallback = void Function({
   Future<String> Function(String?)? handler,
-  bool silenceErrors,
-  bool enableTextEntryEmulation,
-  List<FinderExtension>? finders,
-  List<CommandExtension>? commands,
 });
 
 /// Runs performance tests and generates a detailed performance report.
