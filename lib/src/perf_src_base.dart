@@ -22,7 +22,7 @@ Future<void> startPerformanceTest({
   }
 }
 
-Future<void> stopPerformanceTest({
+Future<String?> stopPerformanceTest({
   required FlutterDriver driver,
 }) async {
   try {
@@ -42,8 +42,10 @@ Future<void> stopPerformanceTest({
 
       final perfDataResult = await driver.requestData(jsonEncode(reportData));
       developer.log(perfDataResult);
+      return perfDataResult;
     }
   } on Exception catch (e, s) {
     developer.log(e.toString(), error: e, stackTrace: s);
+    return null;
   }
 }
