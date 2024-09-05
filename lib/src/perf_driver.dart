@@ -45,19 +45,31 @@ Future<void> perfDriver({PerformanceBaselines? customBaselines}) {
 
         // Collect performance metrics from the timeline summary
         final performanceData = {
-          '90th_percentile_frame_build_time_millis': summary.computePercentileFrameBuildTimeMillis(90),
-          '95th_percentile_frame_build_time_millis': summary.computePercentileFrameBuildTimeMillis(95),
-          '99th_percentile_frame_build_time_millis': summary.computePercentileFrameBuildTimeMillis(99),
-          'missed_frame_build_budget_count': summary.computeMissedFrameBuildBudgetCount(),
-          'average_frame_build_time_millis': summary.computeAverageFrameBuildTimeMillis(),
-          'worst_frame_build_time_millis': summary.computeWorstFrameBuildTimeMillis(),
+          '90th_percentile_frame_build_time_millis':
+              summary.computePercentileFrameBuildTimeMillis(90),
+          '95th_percentile_frame_build_time_millis':
+              summary.computePercentileFrameBuildTimeMillis(95),
+          '99th_percentile_frame_build_time_millis':
+              summary.computePercentileFrameBuildTimeMillis(99),
+          'missed_frame_build_budget_count':
+              summary.computeMissedFrameBuildBudgetCount(),
+          'average_frame_build_time_millis':
+              summary.computeAverageFrameBuildTimeMillis(),
+          'worst_frame_build_time_millis':
+              summary.computeWorstFrameBuildTimeMillis(),
           'total_frames': summary.countFrames(),
-          '90th_percentile_frame_raster_time_millis': summary.computePercentileFrameRasterizerTimeMillis(90),
-          '95th_percentile_frame_raster_time_millis': summary.computePercentileFrameRasterizerTimeMillis(95),
-          '99th_percentile_frame_raster_time_millis': summary.computePercentileFrameRasterizerTimeMillis(99),
-          'missed_frame_rasterizer_budget_count': summary.computeMissedFrameRasterizerBudgetCount(),
-          'average_frame_raster_time_millis': summary.computeAverageFrameRasterizerTimeMillis(),
-          'worst_frame_raster_time_millis': summary.computeWorstFrameRasterizerTimeMillis(),
+          '90th_percentile_frame_raster_time_millis':
+              summary.computePercentileFrameRasterizerTimeMillis(90),
+          '95th_percentile_frame_raster_time_millis':
+              summary.computePercentileFrameRasterizerTimeMillis(95),
+          '99th_percentile_frame_raster_time_millis':
+              summary.computePercentileFrameRasterizerTimeMillis(99),
+          'missed_frame_rasterizer_budget_count':
+              summary.computeMissedFrameRasterizerBudgetCount(),
+          'average_frame_raster_time_millis':
+              summary.computeAverageFrameRasterizerTimeMillis(),
+          'worst_frame_raster_time_millis':
+              summary.computeWorstFrameRasterizerTimeMillis(),
           'total_rasterizer_frames': summary.countRasterizations(),
         };
 
@@ -80,7 +92,8 @@ Future<void> perfDriver({PerformanceBaselines? customBaselines}) {
         };
 
         // Generate and save the performance report
-        final report = convertMapToReadableText(testingData, defaultBaselines: baselines);
+        final report =
+            convertMapToReadableText(testingData, defaultBaselines: baselines);
         saveMarkdownFile(report, '${DateTime.now().toIso8601String()}.md',
             'performance_report/${deviceDetails['operating_system']}');
 
