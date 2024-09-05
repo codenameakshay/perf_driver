@@ -9,26 +9,30 @@ typedef FlutterDriverExtensionCallback = void Function({
   Future<String> Function(String?)? handler,
 });
 
-/// Runs performance tests and generates a detailed performance report.
+/// This method runs performance tests and generates a detailed performance report.
 ///
-/// This method uses the integration_test driver to collect performance data
-/// including CPU usage, memory usage, widget build times, and frame rendering
-/// metrics. It processes the collected data, generates a markdown report,
-/// and saves it to a file. The report includes performance metrics,
-/// comparisons against baselines, and improvement suggestions.
+/// It uses the flutter_driver package to collect performance data,
+/// widget build times, and frame rendering metrics. It processes the collected data,
+/// generates a markdown report, and sends it back to the `stopPerformanceTest` method.
+/// The report includes performance metrics, comparisons against baselines, and improvement suggestions.
 ///
-/// [customBaselines] allows specifying custom performance baselines.
+/// The [customBaselines] parameter allows specifying custom performance baselines.
 /// If not provided, default baselines will be used.
 ///
-/// Create a sample driver file in your project, and include this method in
-/// main method to generate performance reports for your integration tests.
+/// To generate performance reports for your integration tests, create a sample driver file in your project
+/// and include this method in the main method.
 ///
 /// Example -
 /// ```dart
-/// void main() {
-///   perfDriver();
-///   // Or with custom baselines:
-///   // perfDriver(customBaselines: PerformanceBaselines(...));
+/// import 'package:flutter_driver/driver_extension.dart' show enableFlutterDriverExtension;
+/// import 'package:perf_driver/perf_base.dart';
+/// import 'package:your_app/main.dart' as app;
+///
+/// Future<void> main() async {
+///   return await perfDriverBase(
+///     flutterDriverExtension: enableFlutterDriverExtension,
+///     runAppMain: app.main,
+///   );
 /// }
 /// ```
 Future<void> perfDriverBase({

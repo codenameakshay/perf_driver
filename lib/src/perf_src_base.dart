@@ -7,11 +7,24 @@ typedef TestBaseCallback = Future<void> Function(FlutterDriver driver);
 
 Timeline? timeline;
 
-/// This method wraps your performance test with Flutter Driver.
-/// It generates a performance report, including UI and raster thread performance metrics,
-/// as well as device CPU and memory details.
+/// This method starts the performance test with Flutter Driver.
+/// Make sure to create a new folder called `test_driver` in the root of your project.
+/// Create a new file called `main.dart` in the `main_test.dart` folder.
+/// Add the following code to the `main.dart` file:
+/// ```dart
+/// import 'package:flutter_driver/driver_extension.dart' show enableFlutterDriverExtension;
+/// import 'package:perf_driver/perf_base.dart';
+/// import 'package:your_app/main.dart' as app;
 ///
-/// Example command - `fvm flutter drive --driver=test_driver/perf_driver.dart --target=test.dart --no-dds --profile`
+/// Future<void> main() async {
+///   return await perfDriverBase(
+///     flutterDriverExtension: enableFlutterDriverExtension,
+///     runAppMain: app.main,
+///   );
+/// }
+/// ```
+///
+/// Example command for running test - `fvm flutter drive --target=test_driver/test.dart --no-dds --profile`
 Future<void> startPerformanceTest({
   required FlutterDriver driver,
 }) async {
@@ -22,6 +35,14 @@ Future<void> startPerformanceTest({
   }
 }
 
+/// This method stops the performance test and generates a report.
+/// It stops the tracing, downloads the timeline, and generates a markdown report
+/// based on the performance metrics collected. The report includes detailed
+/// information about the performance of the app, including frame build and raster
+/// times, and frame rate information. The method returns the performance report
+/// as a string.
+///
+/// Make sure to run this after `startPerformanceTest` method, and after your actual test.
 Future<String?> stopPerformanceTest({
   required FlutterDriver driver,
 }) async {
