@@ -26,12 +26,23 @@ Future<void> saveMarkdownFile(String content, String fileName, String directory)
 /// This method processes the collected performance data and generates a detailed
 /// markdown report. It includes sections for device details, frame rate information,
 /// improvement suggestions, and detailed performance metrics for both UI and Raster threads.
-String convertMapToReadableText(Map<String, dynamic> data, {required PerformanceBaselines defaultBaselines}) {
+String convertMapToReadableText(
+  Map<String, dynamic> data, {
+  required PerformanceBaselines defaultBaselines,
+  bool isBase = false,
+}) {
   final performance = data['performance'];
-  final cpuUsage = data['cpu_usage'];
-  final memoryUsageInitial = data['memory_usage']['initial']['memory_usage'];
-  final memoryUsageFinal = data['memory_usage']['final']['memory_usage'];
-  final deviceDetails = data['device_details'];
+  var cpuUsage = <String, dynamic>{};
+  var memoryUsageInitial = <String, dynamic>{};
+  var memoryUsageFinal = <String, dynamic>{};
+  var deviceDetails = <String, dynamic>{};
+
+  if (isBase) {
+    cpuUsage = data['cpu_usage'];
+    memoryUsageInitial = data['memory_usage']['initial']['memory_usage'];
+    memoryUsageFinal = data['memory_usage']['final']['memory_usage'];
+    deviceDetails = data['device_details'];
+  }
   final frameRateInfo = data['frame_rate_info'] as Map<String, dynamic>?;
 
   // Generate frame rate information string
@@ -50,7 +61,11 @@ String convertMapToReadableText(Map<String, dynamic> data, {required Performance
   /// This method analyzes various performance metrics and provides specific
   /// suggestions for improvement when certain thresholds are exceeded.
   String generateImprovementSuggestions(
-      Map<String, dynamic> performance, Map<String, dynamic> cpuUsage, int totalFrames, int totalRasterizerFrames) {
+    Map<String, dynamic> performance,
+    int totalFrames,
+    int totalRasterizerFrames, {
+    Map<String, dynamic> cpuUsage = const {},
+  }) {
     StringBuffer suggestions = StringBuffer();
 
     // 90th Percentile Frame Build Time (UI)
@@ -130,10 +145,12 @@ String convertMapToReadableText(Map<String, dynamic> data, {required Performance
     }
 
     // CPU Usage Increase
-    int cpuUsageIncrease = cpuUsage['final']['total_cpu_samples'] - cpuUsage['initial']['total_cpu_samples'];
-    if (cpuUsageIncrease > defaultBaselines.cpuUsageIncrease) {
-      suggestions.writeln(
-          "- **High CPU Usage:** The CPU usage increased significantly ($cpuUsageIncrease cycles). Consider using the CPU profiler in DevTools to identify potential bottlenecks and optimize your code.");
+    if (cpuUsage.isNotEmpty) {
+      int cpuUsageIncrease = cpuUsage['final']['total_cpu_samples'] - cpuUsage['initial']['total_cpu_samples'];
+      if (cpuUsageIncrease > defaultBaselines.cpuUsageIncrease) {
+        suggestions.writeln(
+            "- **High CPU Usage:** The CPU usage increased significantly ($cpuUsageIncrease cycles). Consider using the CPU profiler in DevTools to identify potential bottlenecks and optimize your code.");
+      }
     }
 
     if (suggestions.isEmpty) {
@@ -144,7 +161,7 @@ String convertMapToReadableText(Map<String, dynamic> data, {required Performance
   }
 
   // Generate the final markdown report
-  return '''
+  var report = '''
 # Performance Report
 
 ## Device Details:
@@ -154,7 +171,12 @@ String convertMapToReadableText(Map<String, dynamic> data, {required Performance
 $frameRateString
 
 ## Suggestions:
-${generateImprovementSuggestions(performance, cpuUsage, performance['total_frames'], performance['total_rasterizer_frames'])}
+${generateImprovementSuggestions(
+    performance,
+    performance['total_frames'],
+    performance['total_rasterizer_frames'],
+    cpuUsage: cpuUsage,
+  )}
 
 ### UI Thread Performance
 
@@ -177,7 +199,10 @@ ${generateImprovementSuggestions(performance, cpuUsage, performance['total_frame
 | Skipped Frames (Count)                      | <= ${defaultBaselines.missedFrameRasterizerBudgetCount} frames OR <= ${defaultBaselines.missedFrameRasterizerBudgetPercentage}% of ${performance['total_rasterizer_frames']} = ${(defaultBaselines.missedFrameRasterizerBudgetPercentage * performance['total_rasterizer_frames'] / 100)} | ${performance['missed_frame_rasterizer_budget_count']} | ${checkOrCross(performance['missed_frame_rasterizer_budget_count'] <= defaultBaselines.missedFrameRasterizerBudgetCount || performance['missed_frame_rasterizer_budget_count'] <= (defaultBaselines.missedFrameRasterizerBudgetPercentage * performance['total_rasterizer_frames'] / 100))}  |
 | Average Frame Raster Time (ms)              | <= ${defaultBaselines.averageBuildTime}           | ${performance['average_frame_raster_time_millis']} | ${checkOrCross(performance['average_frame_raster_time_millis'] <= defaultBaselines.averageBuildTime)}  |
 | Slowest Frame Raster Time (ms)              | <= ${defaultBaselines.worstBuildTime}             | ${performance['worst_frame_raster_time_millis']} | ${checkOrCross(performance['worst_frame_raster_time_millis'] <= defaultBaselines.worstBuildTime)}  |
+''';
 
+  if (cpuUsage.isNotEmpty) {
+    report += '''
 ### Device Performance
 
 | Metric                                      | Baseline               | Actual                | Status |
@@ -186,4 +211,7 @@ ${generateImprovementSuggestions(performance, cpuUsage, performance['total_frame
 | Final Memory Usage (MB)                     | <= ${defaultBaselines.memoryUsageMB}              | ${bytesToMB(memoryUsageFinal['heapUsage'])}       | ${checkOrCross(double.parse(bytesToMB(memoryUsageFinal['heapUsage'])) <= defaultBaselines.memoryUsageMB)}  |
 | CPU Usage Increase (Cycles)                 | <= ${defaultBaselines.cpuUsageIncrease} cycles                     | ${cpuUsage['final']['total_cpu_samples'] - cpuUsage['initial']['total_cpu_samples']} | ${checkOrCross((cpuUsage['final']['total_cpu_samples'] - cpuUsage['initial']['total_cpu_samples']) <= defaultBaselines.cpuUsageIncrease)}  |
 ''';
+  }
+
+  return report;
 }

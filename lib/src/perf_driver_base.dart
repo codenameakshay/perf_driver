@@ -41,10 +41,7 @@ Future<void> perfDriverBase({
   flutterDriverExtension(handler: (data) async {
     if (data != null) {
       final jsonData = jsonDecode(data) as Map<String, dynamic>;
-      final cpuUsageData = jsonData['cpu_usage'] as Map<String, dynamic>;
-      final memoryUsageData = jsonData['memory_usage'] as Map<String, dynamic>;
       final widgetBuildData = jsonData['widget_build'] as Map<String, dynamic>;
-      final deviceDetails = jsonData['device_details'] as Map<String, dynamic>;
 
       final timeline = Timeline.fromJson(
         widgetBuildData,
@@ -80,25 +77,15 @@ Future<void> perfDriverBase({
 
       // Compile all testing data
       final testingData = {
-        'device_details': deviceDetails,
         'frame_rate_info': frameRateInfo,
         'performance': performanceData,
-        'cpu_usage': cpuUsageData,
-        'memory_usage': memoryUsageData,
       };
 
       // Generate and save the performance report
       final report = convertMapToReadableText(testingData, defaultBaselines: baselines);
-      await saveMarkdownFile(
-          report, '${DateTime.now().toIso8601String()}.md', 'performance_report/${deviceDetails['operating_system']}');
+      dev.log(report);
 
-      // Write the timeline to a file for further analysis if needed
-      await summary.writeTimelineToFile(
-        'widget_build',
-        pretty: true,
-        includeSummary: true,
-      );
-      return 'Performance data saved successfully!';
+      return report;
     } else {
       dev.log('No data received');
       return 'No data received';
