@@ -11,7 +11,8 @@ String bytesToMB(int? bytes) {
 /// Saves the given content as a markdown file in the specified directory.
 ///
 /// If the directory doesn't exist, it will be created.
-Future<void> saveMarkdownFile(String content, String fileName, String directory) async {
+Future<void> saveMarkdownFile(
+    String content, String fileName, String directory) async {
   final dir = Directory(directory);
   if (!dir.existsSync()) {
     dir.createSync(recursive: true);
@@ -69,84 +70,102 @@ String convertMapToReadableText(
     StringBuffer suggestions = StringBuffer();
 
     // 90th Percentile Frame Build Time (UI)
-    if (performance['90th_percentile_frame_build_time_millis'] > defaultBaselines.percentile90thBuildTime) {
+    if (performance['90th_percentile_frame_build_time_millis'] >
+        defaultBaselines.percentile90thBuildTime) {
       suggestions.writeln(
           "- **UI Build Time:** The 90th percentile frame build time is higher than expected (${performance['90th_percentile_frame_build_time_millis']} ms). Enable the performance overlay and identify heavy operations or widget rebuilds that may be slowing down your UI.");
     }
 
     // 95th Percentile Frame Build Time (UI)
-    if (performance['95th_percentile_frame_build_time_millis'] > defaultBaselines.percentile95thBuildTime) {
+    if (performance['95th_percentile_frame_build_time_millis'] >
+        defaultBaselines.percentile95thBuildTime) {
       suggestions.writeln(
           "- **UI Build Time:** The 95th percentile frame build time is high (${performance['95th_percentile_frame_build_time_millis']} ms). Consider refactoring or optimizing your widgets to reduce the load on the UI thread.");
     }
 
     // 99th Percentile Frame Build Time (UI)
-    if (performance['99th_percentile_frame_build_time_millis'] > defaultBaselines.percentile99thBuildTime) {
+    if (performance['99th_percentile_frame_build_time_millis'] >
+        defaultBaselines.percentile99thBuildTime) {
       suggestions.writeln(
           "- **UI Build Time:** The 99th percentile frame build time is excessively high (${performance['99th_percentile_frame_build_time_millis']} ms). Investigate for any expensive operations that may need to be offloaded to a background thread.");
     }
 
     // Skipped UI Frames
-    int maxSkippedFramesUI = (defaultBaselines.missedFrameBuildBudgetPercentage * totalFrames).round();
-    if (performance['missed_frame_build_budget_count'] > defaultBaselines.missedFrameBuildBudgetCount ||
+    int maxSkippedFramesUI =
+        (defaultBaselines.missedFrameBuildBudgetPercentage * totalFrames)
+            .round();
+    if (performance['missed_frame_build_budget_count'] >
+            defaultBaselines.missedFrameBuildBudgetCount ||
         performance['missed_frame_build_budget_count'] > maxSkippedFramesUI) {
       suggestions.writeln(
           "- **Skipped UI Frames:** Your app skipped ${performance['missed_frame_build_budget_count']} UI frames. Investigate the performance overlay and ensure that your UI operations are efficient.");
     }
 
     // 90th Percentile Frame Raster Time
-    if (performance['90th_percentile_frame_raster_time_millis'] > defaultBaselines.percentile90thBuildTime) {
+    if (performance['90th_percentile_frame_raster_time_millis'] >
+        defaultBaselines.percentile90thBuildTime) {
       suggestions.writeln(
           "- **Raster Time:** The 90th percentile frame raster time is higher than expected (${performance['90th_percentile_frame_raster_time_millis']} ms). Consider simplifying your visuals or reducing the number of layers.");
     }
 
     // 95th Percentile Frame Raster Time
-    if (performance['95th_percentile_frame_raster_time_millis'] > defaultBaselines.percentile95thBuildTime) {
+    if (performance['95th_percentile_frame_raster_time_millis'] >
+        defaultBaselines.percentile95thBuildTime) {
       suggestions.writeln(
           "- **Raster Time:** The 95th percentile frame raster time is high (${performance['95th_percentile_frame_raster_time_millis']} ms). Optimize your rendering logic or avoid using complex drawing operations.");
     }
 
     // 99th Percentile Frame Raster Time
-    if (performance['99th_percentile_frame_raster_time_millis'] > defaultBaselines.percentile99thBuildTime) {
+    if (performance['99th_percentile_frame_raster_time_millis'] >
+        defaultBaselines.percentile99thBuildTime) {
       suggestions.writeln(
           "- **Raster Time:** The 99th percentile frame raster time is excessively high (${performance['99th_percentile_frame_raster_time_millis']} ms). Check for expensive graphics operations or consider reducing visual complexity.");
     }
 
     // Skipped Raster Frames
-    int maxSkippedFramesRaster = (defaultBaselines.missedFrameRasterizerBudgetPercentage * totalFrames).round();
-    if (performance['missed_frame_rasterizer_budget_count'] > defaultBaselines.missedFrameRasterizerBudgetCount ||
-        performance['missed_frame_rasterizer_budget_count'] > maxSkippedFramesRaster) {
+    int maxSkippedFramesRaster =
+        (defaultBaselines.missedFrameRasterizerBudgetPercentage * totalFrames)
+            .round();
+    if (performance['missed_frame_rasterizer_budget_count'] >
+            defaultBaselines.missedFrameRasterizerBudgetCount ||
+        performance['missed_frame_rasterizer_budget_count'] >
+            maxSkippedFramesRaster) {
       suggestions.writeln(
           "- **Skipped Raster Frames:** Your app skipped ${performance['missed_frame_rasterizer_budget_count']} raster frames. This indicates heavy graphics operations that may need to be optimized.");
     }
 
     // Average Frame Build Time (UI)
-    if (performance['average_frame_build_time_millis'] > defaultBaselines.averageBuildTime) {
+    if (performance['average_frame_build_time_millis'] >
+        defaultBaselines.averageBuildTime) {
       suggestions.writeln(
           "- **Average UI Build Time:** The average frame build time is higher than expected (${performance['average_frame_build_time_millis']} ms). Consider optimizing your widget tree and avoiding unnecessary rebuilds.");
     }
 
     // Slowest Frame Build Time (UI)
-    if (performance['worst_frame_build_time_millis'] > defaultBaselines.worstBuildTime) {
+    if (performance['worst_frame_build_time_millis'] >
+        defaultBaselines.worstBuildTime) {
       suggestions.writeln(
           "- **Slowest UI Frame Build Time:** The slowest frame build time was particularly high (${performance['worst_frame_build_time_millis']} ms). Investigate the cause using the performance overlay and try to identify heavy operations.");
     }
 
     // Average Frame Raster Time
-    if (performance['average_frame_raster_time_millis'] > defaultBaselines.averageBuildTime) {
+    if (performance['average_frame_raster_time_millis'] >
+        defaultBaselines.averageBuildTime) {
       suggestions.writeln(
           "- **Average Raster Time:** The average frame raster time is higher than expected (${performance['average_frame_raster_time_millis']} ms). Consider simplifying your visual design or reducing the number of layers.");
     }
 
     // Slowest Frame Raster Time
-    if (performance['worst_frame_raster_time_millis'] > defaultBaselines.worstBuildTime) {
+    if (performance['worst_frame_raster_time_millis'] >
+        defaultBaselines.worstBuildTime) {
       suggestions.writeln(
           "- **Slowest Raster Frame Time:** The slowest raster frame time was particularly high (${performance['worst_frame_raster_time_millis']} ms). Optimize your graphics operations or consider offloading heavy work to a background thread.");
     }
 
     // CPU Usage Increase
     if (cpuUsage.isNotEmpty) {
-      int cpuUsageIncrease = cpuUsage['final']['total_cpu_samples'] - cpuUsage['initial']['total_cpu_samples'];
+      int cpuUsageIncrease = cpuUsage['final']['total_cpu_samples'] -
+          cpuUsage['initial']['total_cpu_samples'];
       if (cpuUsageIncrease > defaultBaselines.cpuUsageIncrease) {
         suggestions.writeln(
             "- **High CPU Usage:** The CPU usage increased significantly ($cpuUsageIncrease cycles). Consider using the CPU profiler in DevTools to identify potential bottlenecks and optimize your code.");
@@ -154,7 +173,8 @@ String convertMapToReadableText(
     }
 
     if (suggestions.isEmpty) {
-      suggestions.writeln("Your app is performing well with no significant issues detected.");
+      suggestions.writeln(
+          "Your app is performing well with no significant issues detected.");
     }
 
     return suggestions.toString();

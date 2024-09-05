@@ -7,7 +7,8 @@ import 'package:perf_driver/src/vm_utils.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:vm_service/vm_service_io.dart';
 
-typedef TestCallback = Future<void> Function(IntegrationTestWidgetsFlutterBinding binding, WidgetTester tester);
+typedef TestCallback = Future<void> Function(
+    IntegrationTestWidgetsFlutterBinding binding, WidgetTester tester);
 
 /// Wrap your integration test with this method, and use the driver to run the test.
 /// Currently, this method generates a performance report for the test, which includes UI and raster thread performance metrics.
@@ -31,8 +32,10 @@ Future<void> runPerformanceTest(
 
   try {
     // Connect to the VM service
-    final serviceProtocolUri = await developer.Service.getInfo().then((info) => info.serverUri);
-    vmService = await vmServiceConnectUri('${serviceProtocolUri?.replace(scheme: 'ws')}ws');
+    final serviceProtocolUri =
+        await developer.Service.getInfo().then((info) => info.serverUri);
+    vmService = await vmServiceConnectUri(
+        '${serviceProtocolUri?.replace(scheme: 'ws')}ws');
 
     // Get the isolate ID
     final vm = await vmService.getVM();
