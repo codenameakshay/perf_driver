@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:perf_driver/src/vm_utils.dart';
+import 'package:perf_driver/src/common/vm_utils.dart';
 import 'package:vm_service/vm_service.dart';
 import 'package:vm_service/vm_service_io.dart';
 
@@ -15,7 +15,7 @@ typedef TestCallback = Future<void> Function(
 /// It also includes the device CPU and memory details, but they are highly dependent on the baseline, so they are not very useful as it is.
 ///
 /// Example command - `fvm flutter drive --driver=package:perf_driver/perf_driver.dart --target=test.dart --no-dds --profile`
-Future<void> runPerformanceTest(
+Future<void> runPerformanceIntegrationTest(
   String testName, {
   required Widget testWidget,
   required WidgetTester tester,

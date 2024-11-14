@@ -1,5 +1,20 @@
 /// Defines performance baseline metrics for an application.
 class PerformanceBaselines {
+  /// Creates a new [PerformanceBaselines] instance with default values.
+  const PerformanceBaselines({
+    this.percentile90thBuildTime = 6.0,
+    this.percentile95thBuildTime = 8.0,
+    this.percentile99thBuildTime = 12.0,
+    this.missedFrameBuildBudgetCount = 2,
+    this.missedFrameBuildBudgetPercentage = 2.5,
+    this.missedFrameRasterizerBudgetCount = 2,
+    this.missedFrameRasterizerBudgetPercentage = 2.5,
+    this.averageBuildTime = 6.0,
+    this.worstBuildTime = 30.0,
+    this.memoryUsageMB = 200.0,
+    this.cpuUsageIncrease = 500000,
+  });
+
   /// The 90th percentile of frame build times in milliseconds.
   final double percentile90thBuildTime;
 
@@ -32,19 +47,4 @@ class PerformanceBaselines {
 
   /// The increase in CPU usage, measured in CPU samples.
   final int cpuUsageIncrease;
-
-  /// Creates a new [PerformanceBaselines] instance with default values.
-  const PerformanceBaselines({
-    this.percentile90thBuildTime = 6.0,
-    this.percentile95thBuildTime = 8.0,
-    this.percentile99thBuildTime = 12.0,
-    this.missedFrameBuildBudgetCount = 2,
-    this.missedFrameBuildBudgetPercentage = 2.5,
-    this.missedFrameRasterizerBudgetCount = 2,
-    this.missedFrameRasterizerBudgetPercentage = 2.5,
-    this.averageBuildTime = 6.0,
-    this.worstBuildTime = 30.0,
-    this.memoryUsageMB = 200.0,
-    this.cpuUsageIncrease = 500000,
-  });
 }

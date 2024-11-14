@@ -17,7 +17,7 @@ Timeline? timeline;
 /// import 'package:your_app/main.dart' as app;
 ///
 /// Future<void> main() async {
-///   return await perfDriverBase(
+///   return await perfDriverFlutterDriverTest(
 ///     flutterDriverExtension: enableFlutterDriverExtension,
 ///     runAppMain: app.main,
 ///   );
@@ -25,7 +25,7 @@ Timeline? timeline;
 /// ```
 ///
 /// Example command for running test - `fvm flutter drive --target=test_driver/test.dart --no-dds --profile`
-Future<void> startPerformanceTest({
+Future<void> runPerformanceFlutterDriverTest({
   required FlutterDriver driver,
 }) async {
   try {
@@ -42,8 +42,8 @@ Future<void> startPerformanceTest({
 /// times, and frame rate information. The method returns the performance report
 /// as a string.
 ///
-/// Make sure to run this after `startPerformanceTest` method, and after your actual test.
-Future<String?> stopPerformanceTest({
+/// Make sure to run this after `runPerformanceFlutterDriverTest()` method, and after your actual test.
+Future<String?> stopPerformanceFlutterDriverTest({
   required FlutterDriver driver,
 }) async {
   try {

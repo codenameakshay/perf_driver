@@ -2,8 +2,8 @@ import 'dart:developer' as dev;
 
 import 'package:flutter_driver/flutter_driver.dart' as driver;
 import 'package:integration_test/integration_test_driver.dart';
-import 'package:perf_driver/src/perf_baselines.dart';
-import 'package:perf_driver/src/utils.dart';
+import 'package:perf_driver/src/common/perf_baselines.dart';
+import 'package:perf_driver/src/common/utils.dart';
 
 /// Runs performance tests and generates a detailed performance report.
 ///
@@ -22,12 +22,13 @@ import 'package:perf_driver/src/utils.dart';
 /// Example -
 /// ```dart
 /// void main() {
-///   perfDriver();
+///   perfDriverIntegrationTest();
 ///   // Or with custom baselines:
-///   // perfDriver(customBaselines: PerformanceBaselines(...));
+///   // perfDriverIntegrationTest(customBaselines: PerformanceBaselines(...));
 /// }
 /// ```
-Future<void> perfDriver({PerformanceBaselines? customBaselines}) {
+Future<void> perfDriverIntegrationTest(
+    {PerformanceBaselines? customBaselines}) {
   final baselines = customBaselines ?? const PerformanceBaselines();
 
   return integrationDriver(
@@ -94,14 +95,16 @@ Future<void> perfDriver({PerformanceBaselines? customBaselines}) {
         // Generate and save the performance report
         final report =
             convertMapToReadableText(testingData, defaultBaselines: baselines);
-        saveMarkdownFile(report, '${DateTime.now().toIso8601String()}.md',
-            'performance_report/${deviceDetails['operating_system']}');
+        await saveMarkdownFile(
+          report,
+          '${DateTime.now().toIso8601String()}.md',
+          'performance_report/${deviceDetails['operating_system']}',
+        );
 
         // Write the timeline to a file for further analysis if needed
         await summary.writeTimelineToFile(
           'widget_build',
           pretty: true,
-          includeSummary: true,
         );
       } else {
         dev.log('No data received');
